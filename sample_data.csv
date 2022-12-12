@@ -1,0 +1,17 @@
+﻿spcl_char,no_char,email,decimal,url,test,sample_col,test_int,store_id,revenue,check
+r#st@et%^(=,4785,abc.def@mail-archive.com,2.48,http://www.example.com/index.html,487,215478,4785,715,7800,1
+ahbjs,478stc,abc.def@mail#archive.com,2.147,http://www.example.com/ %20here.html,487,gfds784,478,715,9500,2
+r&cfr$5{>,gfds784,abc.def@mail.org,1.14,http://www.example.com/and%26here,    ,247,78434,715,5100,3
+sample,215478,abc.def@mail,47.14,www.example.com/file[/].html,487,70,215478,715,5200,4
+sample,215478,abc.def@mail,12.11,www.example.com/file[/].html,487,76,215478,615,6300,5
+sample,215478,abc.def@mail,    ,www.example.com/file[/].html,487,4586,215478,615,1300,6
+sample,215478,abc.def@mail,14.187,www.example.com/file[/].html,487,52,215478,635,2100,7
+sample,215478,abc.def@mail,      ,www.example.com/file[/].html,487,568,215478,715,8400,8
+sample,215478,abc.def@mail,     ,www.example.com/file[/].html,47.14,5,215478,635,5000,9
+sample,215478,abc.def@mail,14.178,www.example.com/file[/].html,124a,458,215478,635,1500,10
+sample,215478,abc.def@mail,abc,www.example.com/file[/].html,acge,45,215478,635,6000,11
+sample,215478,abc.def@mail,123abc,www.example.com/file[/].html,2.147,48,215478,715,1547,12
+sample,215478,abc.def@mail,127,www.example.com/file[/].html,4.178,56,215478,635,6541,13
+sample,215478,abc.def@mail,2.14,www.example.com/file[/].html,,,6,635,5487,14
+sample,215478,abc.def@mail,2.144,www.example.com/file[/].html,,,4,635,5487,15
+,,,,,,,4,715,5487,16
