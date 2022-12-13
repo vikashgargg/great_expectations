@@ -1,0 +1,92 @@
+#####modify create data context
+
+data_context_config = DataContextConfig(
+    validation_operators={
+        "action_list_operator": {
+            "class_name": "ActionListValidationOperator",
+            "action_list": [
+                {
+                    "name": "store_validation_result",
+                    "action": {"class_name": "StoreValidationResultAction"},
+                },
+                {
+                    "name": "store_evaluation_params",
+                    "action": {"class_name": "StoreEvaluationParametersAction"},
+                },
+                {
+                    "name": "update_data_docs",
+                    "action": {"class_name": "UpdateDataDocsAction"},
+                },
+            ],
+        }
+    },
+    store_backend_defaults=FilesystemStoreBackendDefaults(
+        root_directory=root_directory
+    ),
+)
+context = BaseDataContext(project_config=data_context_config)
+
+
+#####comment out validator part
+
+my_spark_datasource_config = {
+    "name": "insert_your_datasource_name_here",
+    "class_name": "Datasource",
+    "execution_engine": {"class_name": "SparkDFExecutionEngine"},
+    "data_connectors": {
+        "insert_your_data_connector_name_here": {
+            "module_name": "great_expectations.datasource.data_connector",
+            "class_name": "RuntimeDataConnector",
+            "batch_identifiers": [
+                "some_key_maybe_pipeline_stage",
+                "some_other_key_maybe_run_id",
+            ],
+        }
+    },
+}
+ 
+context.test_yaml_config(yaml.dump(my_spark_datasource_config))
+ 
+context.add_datasource(**my_spark_datasource_config)
+ 
+batch_request = RuntimeBatchRequest(
+    datasource_name="insert_your_datasource_name_here",
+    data_connector_name="insert_your_data_connector_name_here",
+    data_asset_name="<YOUR_MEANGINGFUL_NAME>",  # This can be anything that identifies this data_asset for you
+    batch_identifiers={
+        "some_key_maybe_pipeline_stage": "prod",
+        "some_other_key_maybe_run_id": f"my_run_name_{datetime.date.today().strftime('%Y%m%d')}",
+    },
+    runtime_parameters={"batch_data": non_suspicious_DF},  # Your dataframe goes here
+)
+ 
+expectation_suite_name = "insert_your_expectation_suite_name_here"
+context.create_expectation_suite(
+    expectation_suite_name=expectation_suite_name, overwrite_existing=True
+)
+# validator = context.get_validator(
+#     batch_request=batch_request,
+#     expectation_suite_name=expectation_suite_name,
+# )
+
+suit_lst = []
+col_expectations = {"expect_column_pair_values_a_to_be_greater_than_b":{"column_A":"moving_average","column_B":"lower_volume_limit"},"expect_column_values_to_not_be_null":{"column":"Rainfall"}}
+
+from great_expectations.core import ExpectationSuite, ExpectationConfiguration
+for k,v in col_expectations.items():
+    expectation_configuration = ExpectationConfiguration(
+    expectation_type =k, kwargs = v
+    )
+    suit_lst.append(expectation_configuration)
+
+suite = ExpectationSuite("custom_expec_test",expectations=suit_lst)
+
+validator_list = []
+validator = context.get_validator(batch_request= batch_request, expectation_suite= suite)
+
+validator.save_expectation_suite(discard_failed_expectations=False)
+
+validator_list.append(validator)
+results = context.run_validation_operator("action_list_operator",assets_to_validate=validator_list)
+
+print(results)
